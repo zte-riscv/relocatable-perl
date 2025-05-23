@@ -37,6 +37,7 @@ RUN --mount=type=bind,target=/src set -eux; \
   /src/build/quiet.sh apt-get install -y --no-install-recommends \
     ca-certificates \
     gcc \
+    less \
     libc6-dev \
     make \
     patch \

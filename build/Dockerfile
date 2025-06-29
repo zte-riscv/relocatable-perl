@@ -16,7 +16,7 @@ RUN --mount=type=bind,target=/src set -eux; \
     xz-utils \
     ;
 
-ARG LIBXCRYPT_VERSION=4.4.36
+ARG LIBXCRYPT_VERSION=4.4.38
 
 RUN --mount=type=bind,target=/src set -eux; \
   cd /tmp; \

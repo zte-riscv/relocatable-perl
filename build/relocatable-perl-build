@@ -11,7 +11,6 @@ use File::Temp qw(tempfile tempdir);
 use File::Path 'rmtree';
 use File::Basename 'dirname';
 use Pod::Usage 'pod2usage';
-use Devel::PatchPerl;
 use CPAN::Perl::Releases::MetaCPAN 'perl_tarballs';
 use HTTP::Tinyish;
 use IPC::Run3 'run3';
@@ -164,9 +163,6 @@ sub perl_build {
     }
 
     chdir "$tempdir/perl-$perl_version" or die;
-    my $devel = "Devel::PatchPerl";
-    say "---> patching by $devel " . $devel->VERSION;
-    $devel->patch_source($perl_version, ".");
     say "---> building perl $perl_version, see $log for progress";
     run \@Configure, $log;
     my @option = $jobs ? ("--jobs=$jobs") : ();

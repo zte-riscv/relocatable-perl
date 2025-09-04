@@ -49,8 +49,8 @@ if ($body->{errors}) {
     die $JSON->encode($body->{errors});
 }
 
-my $new_form = qr{/(?<version>\d+\.\d+\.\d+\.\d+)/perl-(?<os>linux|darwin)-(?<arch>amd64|arm64)\.tar\.(?<compress>gz|xz)$};
-my $old_form = qr{/(?<version>\d+\.\d+\.\d+\.\d+)/perl-(?:(?<arch>x86_64|aarch64)-)?(?<os>linux|darwin).*\.(?<compress>gz|xz)$};
+my $new_form = qr{/(?<version>\d+\.\d+\.\d+\.\d+)/perl-(?<os>linux|darwin)-(?<arch>amd64|arm64|riscv64)\.tar\.(?<compress>gz|xz)$};
+my $old_form = qr{/(?<version>\d+\.\d+\.\d+\.\d+)/perl-(?:(?<arch>x86_64|aarch64|riscv64)-)?(?<os>linux|darwin).*\.(?<compress>gz|xz)$};
 
 my @release;
 for my $asset (map { $_->{node}{releaseAssets}{edges}->@* } $body->{data}{repository}{releases}{edges}->@*) {
@@ -59,6 +59,7 @@ for my $asset (map { $_->{node}{releaseAssets}{edges}->@* } $body->{data}{reposi
         my $arch = $+{arch} || 'amd64';
         $arch = "amd64" if $arch eq "x86_64";
         $arch = "arm64" if $arch eq "aarch64";
+        $arch = "riscv64" if $arch eq "riscv64";
         push @release, {
             url => $url,
             version => $+{version},
@@ -71,7 +72,7 @@ for my $asset (map { $_->{node}{releaseAssets}{edges}->@* } $body->{data}{reposi
 
 my $sort_by = sub ($a, $b) {
     my %os = (linux => 1, darwin => 0);
-    my %arch = (amd64 => 1, arm64 => 0);
+    my %arch = (amd64 => 2, arm64 => 1, riscv64 => 0);
     my %compress = (xz => 1, gz => 0);
     $b->{version} cmp $a->{version}
     ||

@@ -24,6 +24,17 @@ jobs:
         with:
           name: linux-arm64
           path: linux-arm64
+  linux-riscv64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - run: docker buildx build --platform linux/riscv64 -o linux-riscv64 -f build/Dockerfile .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-riscv64
+          path: linux-riscv64
   darwin-amd64:
     runs-on: macos-13
     steps:
@@ -59,6 +70,7 @@ jobs:
     needs:
       - linux-amd64
       - linux-arm64
+      - linux-riscv64
       - darwin-amd64
       - darwin-arm64
     steps:
@@ -70,6 +82,10 @@ jobs:
         with:
           name: linux-arm64
           path: linux-arm64
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-riscv64
+          path: linux-riscv64
       - uses: actions/download-artifact@v4
         with:
           name: darwin-amd64
